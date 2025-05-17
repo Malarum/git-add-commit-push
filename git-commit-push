@@ -1,0 +1,67 @@
+#!/bin/bash
+
+GREEN=$(tput setaf 2)
+RED=$(tput setaf 1)
+NC=$(tput sgr0)
+
+function check_git() {
+
+  if [ ! -d ".git" ]; then
+    echo "$RED.git not in the current directory...exiting$NC"
+    exit
+  fi
+
+}
+
+function commit_code() {
+  while true; do
+    read -p "would you like to commit at this time? [yes/no] " commit
+    if [ "$commit" == "yes" ]; then
+
+      read -p "Add your comment: " comment
+      git commit -m "$comment"
+      break
+
+    elif [[ "$commit" == "no" ]]; then
+
+      echo "added to the repository"
+      break
+
+    else
+
+      echo "Not a valid option, try again"
+    fi
+  done
+}
+
+function push_code() {
+  while true; do
+
+    read -p "Would you like to push to your remote repository? [yes/no] " push
+
+    if [ "$push" == "yes" ]; then
+
+      read -p "Enter the branch you wish to push to: " branch
+      git push origin "$branch"
+      break
+
+    elif [ "$push" == "no" ]; then
+
+      break
+
+    else
+      echo -e "Not a valid option, please try again"
+    fi
+  done
+
+}
+
+function main() {
+  check_git
+  git add .
+  commit_code
+  push_code
+  echo -e "$GREEN[+]Task complete exiting...$NC"
+}
+
+main
