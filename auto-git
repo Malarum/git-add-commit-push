@@ -4,6 +4,18 @@ GREEN=$(tput setaf 2)
 RED=$(tput setaf 1)
 NC=$(tput sgr0)
 
+if [ ! -e "$(which auto-git 2>&1)" ]; then
+  echo "[+]script not in PATH, adding to PATH"
+  sudo cp $0 /usr/local/bin/auto-git
+  sleep 1
+  if [ -e "$(which auto-git 2>&1)" ]; then
+    echo -e "$GREEN[+] Successfully added to PATH$NC"
+  else
+    echo -e "$RED[+] Failed to add to PATH please try running again$NC"
+    exit 1
+  fi
+fi
+
 function check_git() {
 
   if [ ! -d ".git" ]; then
@@ -17,18 +29,13 @@ function commit_code() {
   while true; do
     read -p "would you like to commit at this time? [yes/no] " commit
     if [ "$commit" == "yes" ]; then
-
       read -p "Add your comment: " comment
       git commit -m "$comment"
       break
-
     elif [[ "$commit" == "no" ]]; then
-
       echo "added to the repository"
       break
-
     else
-
       echo "Not a valid option, try again"
     fi
   done
@@ -36,19 +43,13 @@ function commit_code() {
 
 function push_code() {
   while true; do
-
     read -p "Would you like to push to your remote repository? [yes/no] " push
-
     if [ "$push" == "yes" ]; then
-
       read -p "Enter the branch you wish to push to: " branch
       git push origin "$branch"
       break
-
     elif [ "$push" == "no" ]; then
-
       break
-
     else
       echo -e "Not a valid option, please try again"
     fi
